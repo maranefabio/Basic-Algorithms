@@ -1,28 +1,46 @@
-#This program, with the help of Numpy, returns the average of the given numbers. It also returns the sum of the numbers, the biggest and smallest ones, the variance, the standard deviation and a plot of the numbers, with matplotlib. The program only accepts numerical values, and ends the count when an string value is given.
+#This program returns the average, variance and standard deviation of the given numbers. It also returns a distribution plot, with Seaborn and MatPlotLib. The program only accepts numerical values, and ends the count when an string value is given.
 
 import numpy as np
-import matplotlib.pyplot as plt
+import seaborn as sns
 import math
-from termcolor import cprint, colored
+import matplotlib.pyplot as plt
+from collections import Counter
 import os
 
+#Defining the plotting function
+def plot(l = np.array([]), a = float, v = float, d = float, m = float, M = float):
+    y = list(Counter(l).values())                                   #Finding the number of occurrences of the most common number
+    sns.set_theme(style = "ticks", palette = 'pastel')              #Seaborn themes
+    sns.histplot(data = l,              
+                 color = 'blue',
+                 discrete = True,                                   #The "discrete" parameter will separate the bars for each value
+                 kde = True,                                        #Plot of an estimated probability density
+                 legend = False,            
+                 edgecolor = 'black')
+    plt.yticks(np.arange(min(y), max(y)+2, 1))                      #Setting the scale for the y-axis
+    plt.title(f'NUMBERS DISTRIBUTION\n  $\overline{{x}} = {round(a, 4)}$  ${{\sigma^2}} = {round(v, 4)}$  ${{\sigma}} = {round(d, 4)}$')
+    plt.ylabel('OCCURRENCE')
+    plt.xlabel(f'NUMBERS')
 
-#Defining functions for stylized printing with the termcolor library
-print_yellow = lambda x: cprint(x, 'yellow', attrs = ['blink'])
-print_cyan = lambda x: cprint(x, 'cyan', attrs = ['bold'])    
-print_green = lambda x: cprint(x, 'green')
-print_blue = lambda x: cprint(x, 'blue')
-print_red = lambda x: cprint(x, 'red', attrs = ['bold'])
+    plt.minorticks_on()                                             #Turning on the minor ticks for better visualization
+    plt.tight_layout()
+    plt.autoscale()
+    plt.grid()
+
+    return plt.show()
+
 
 #Determining the size of the terminal with the library OS
 c = os.get_terminal_size().columns                          
 
-#Defining the user input list and a Numpy array for storage                                        
-def Avg(n = [], a = np.array([])):                   
-    print_red('******************** STATISTICS CALCULATOR :) ********************'.center(c))
-    print_cyan('This program calculates the average, variance and standard deviation of all the given numbers.'.center(c))
+#Defining the user input list and a Numpy array for storage.  
+#Numpy is needed for later use with MatPlotLIb                                        
+def calculator(n = [], ar = np.array([])):                   
+    print('******************** STATISTICS CALCULATOR :) ********************'.center(c))
+    print('This program calculates the average, variance and standard deviation of all the given numbers.'.center(c))
+
     #Showing the ending mechanism to the user    
-    print_yellow('Instructions:  Input one number at a time. To stop the count, just press ENTER without writing anything'.center(c)), 
+    print('Instructions:  Input one number at a time. To stop the count, just press ENTER without writing anything'.center(c)), 
     print(''.center(c, '-'))
 
     try :                                                   #try/except construction for continuous storage, until a string value is given 
@@ -31,34 +49,24 @@ def Avg(n = [], a = np.array([])):
             n.append(k)                                     #Appending to the list
     except ValueError:                                      #Constraint to string values
         print(''.center(c, '-'))
-        print_red('{}'.format('Results :D\n').center(c))
+        print('{}'.format('Results :D\n').center(c))
 
     #After the exception is achieved, the elements of the list are appended to a Numpy array                           
     for i in range(len(n)):                                 
-        a = np.append(a, n[i])
+        ar = np.append(ar, n[i])
 
-    s = np.sum(a)                                           #Sum of all the numbers                 
-    avg = s/(len(a))                                        #Average value
-    b = np.max(a)                                           #Biggest number
-    l = np.min(a)                                           #Smallest number
+    s = np.sum(ar)                                          #Sum of all the numbers                 
+    a = s/(len(ar))                                         #Average value
+    M = np.max(ar)                                          #Biggest number
+    m = np.min(ar)                                          #Smallest number
 
-    #Calculus for the variance
-    v = 0
-    for i in range(len(a)):
-        v += ((a[i]-avg)**2)/(len(a)) 
+    v = 0                                                   #Calculus for the variance
+    for i in range(len(ar)):
+        v += ((ar[i]-a)**2)/(len(ar)) 
 
-    #Standard deviation
-    d = math.sqrt(v)
+    d = math.sqrt(v)                                        #Standard deviation
 
-    #Separate printing for avoiding color deformatting
-    return(
-        print_yellow('{:>70} - Given numbers:  {}\n'.format('', n)),
-        print_green('{:>70} - Sum of all given numbers =  {}'.format('', s)), 
-        print_blue('{:>70} - Average value =  {}'.format('', avg)),
-        print_green('{:>70} - Variance =  {}'.format('', v)),
-        print_blue('{:>70} - Standard Deviation =  {}'.format('', d)),
-        print_green('{:>70} - Smallest given number =  {}'.format('', l)),
-        print_blue('{:>70} - Biggest given number =  {}'.format('', b))
-        )
+    return plot(ar, a, v , d, m, M)
+
         
-Avg()
+calculator()
