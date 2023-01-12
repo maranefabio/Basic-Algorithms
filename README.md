@@ -1,5 +1,5 @@
-# Some Coding
-Some basic coding :)
+#Some Basic Coding
+Some coding, for learning and for fun :)
 Descriptions at the first lines.
 
 - Python
