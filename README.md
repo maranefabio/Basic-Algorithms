@@ -1,4 +1,4 @@
-#Coding for learning and for fun :)
+# Coding for learning and for fun :)
 Descriptions at the first lines.
 
 - Python
