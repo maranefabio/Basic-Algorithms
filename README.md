@@ -1,4 +1,4 @@
-# Database Conceptual Projects
+# Basic Algorithms
 
 (En-US)
 Welcome!
